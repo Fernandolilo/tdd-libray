@@ -10,5 +10,7 @@ import com.systempro.library.entity.Book;
 @Repository
 public interface BookRepository extends JpaRepository<Book, String>{
 
+	boolean existsByIsbn(String isbn);
+
 	
 }
