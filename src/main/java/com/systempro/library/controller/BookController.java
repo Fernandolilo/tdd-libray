@@ -12,6 +12,8 @@ import com.systempro.library.dto.BookDTO;
 import com.systempro.library.entity.Book;
 import com.systempro.library.service.BookService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/books")
 public class BookController {
@@ -26,7 +28,7 @@ public class BookController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public BookDTO create(@RequestBody BookDTO dto) {
+	public BookDTO create(@RequestBody @Valid BookDTO dto) {
 		Book entity =  mapper.map(dto, Book.class);
 		entity = service.save(entity);
 

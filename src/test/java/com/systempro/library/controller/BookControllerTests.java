@@ -3,6 +3,7 @@ package com.systempro.library.controller;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,8 +74,18 @@ public class BookControllerTests {
 	
 	@DisplayName("DEVE lancar erro de validacao quando houver dados nulls.")
 	@Test
-	public void createInvalidBookTest() {
+	public void createInvalidBookTest() throws Exception {
+		String json = new ObjectMapper().writeValueAsString(new BookDTO());
 		
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+				.post(BOOK_API)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.content(json);
+		
+		mockMvc.perform(request)
+				.andExpect(status().isBadRequest() )
+				.andExpect(jsonPath("errors", Matchers.hasSize(3)));
 	}
 
 
