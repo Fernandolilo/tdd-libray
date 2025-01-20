@@ -1,6 +1,8 @@
 package com.systempro.library.controller;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,26 +18,19 @@ import com.systempro.library.service.BookService;
 public class BookController {
 
 	private final BookService service;
+	private final ModelMapper mapper;
 
-	public BookController(BookService service) {
+	public BookController(BookService service, ModelMapper mapper) {
 		this.service = service;
+		this.mapper = mapper;
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public BookDTO create(@RequestBody BookDTO dto) {
-		Book entity = Book.builder()
-				.author(dto.getAuthor())
-				.title(dto.getTitle())
-				.isbn(dto.getIsbn())
-				.build();
+		Book entity =  mapper.map(dto, Book.class);
 		entity = service.save(entity);
 
-		return BookDTO.builder()
-				.id(entity.getId())
-				.author(entity.getAuthor())
-				.title(entity.getTitle())
-				.isbn(entity.getIsbn())
-				.build();
+		return mapper.map(entity, BookDTO.class);
 	}
 }
