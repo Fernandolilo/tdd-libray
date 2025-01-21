@@ -47,7 +47,7 @@ public class BookControllerTests {
 		BookDTO dto = createNewBook();
 
 		// instacia de mock para test, salvar novo book, simular o save do service
-		Book savedBook = Book.builder().id("1L").author("Fernando").title("As aventuras ").isbn("001").build();
+		Book savedBook = Book.builder().id(1L).autor("Fernando").title("As aventuras ").isbn("001").build();
 		BDDMockito.given(service.save(Mockito.any(Book.class))).willReturn(savedBook);
 
 		String json = new ObjectMapper().writeValueAsString(dto);

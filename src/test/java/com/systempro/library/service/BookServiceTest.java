@@ -37,9 +37,13 @@ public class BookServiceTest {
 	public void saveBookTest() {
 		// cenario
 		Book book = createValidBook();
+		
+		// usar o Mocktio para simular um salvamento, passando uma string qualquer e
+		//passando o default de boolean é false
+		Mockito.when(repository.existsByIsbn(Mockito.anyString())).thenReturn(false);
 
 		Mockito.when(repository.save(book))
-				.thenReturn(Book.builder().id("1").title("As aventuras").author("Fulano").isbn("001").build());
+				.thenReturn(Book.builder().id(1L).title("As aventuras").autor("Fulano").isbn("001").build());
 
 		// execução
 
@@ -49,7 +53,7 @@ public class BookServiceTest {
 
 		assertThat(savedBook.getId()).isNotNull();
 		assertThat(savedBook.getTitle()).isEqualTo("As aventuras");
-		assertThat(savedBook.getAuthor()).isEqualTo("Fulano");
+		assertThat(savedBook.getAutor()).isEqualTo("Fulano");
 		assertThat(savedBook.getIsbn()).isEqualTo("001");
 
 	}
@@ -60,22 +64,25 @@ public class BookServiceTest {
 
 		// cenario
 		Book book = createValidBook();
+		// usar o Mocktio para simular um salvamento, passando uma string qualquer e
+		// dizendo que é verdadeiro uma vez que o default de boolean é false
 		Mockito.when(repository.existsByIsbn(Mockito.anyString())).thenReturn(true);
 
 		// "ISBN ja cadastrado"
 
 		// execução
 		Throwable exceptions = Assertions.catchThrowable(() -> service.save(book));
-	
-		//verificação
+
+		// verificação
 		assertThat(exceptions).isInstanceOf(BusinessException.class).hasMessage("ISBN ja cadastrado");
-		
-		//verifique que meu repository nunca seja chamado para salvar o save com o paramento book
+
+		// verifique que meu repository nunca seja chamado para salvar o save com o
+		// paramento book
 		Mockito.verify(repository, Mockito.never()).save(book);
 
 	}
 
 	private Book createValidBook() {
-		return Book.builder().author("Fulano").title("As aventuras").isbn("001").build();
+		return Book.builder().autor("Fulano").title("As aventuras").isbn("001").build();
 	}
 }

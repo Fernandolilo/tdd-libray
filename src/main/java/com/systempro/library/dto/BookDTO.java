@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class BookDTO {
 
 	
-	private String id;
+	private Long id;
 	@NotEmpty
 	private String title;
 	@NotEmpty

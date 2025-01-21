@@ -1,6 +1,6 @@
 spring:
   application:
-    name:  library   
+    name: library 
   datasource:    
     url: jdbc:h2:mem:testdb
     username: sa
@@ -16,4 +16,3 @@ spring:
     default-property-inclusion: NON_NULL
     serialization:
       fail-on-empty-beans: false  
-   
