@@ -17,7 +17,7 @@ public class BookDTO {
 	@NotEmpty
 	private String title;
 	@NotEmpty
-	private String author;
+	private String autor;
 	@NotEmpty
 	private String isbn;
 }

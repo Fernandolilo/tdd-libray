@@ -3,6 +3,8 @@ package com.systempro.library.controller;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Optional;
+
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,8 +57,10 @@ public class BookControllerTests {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(BOOK_API)
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).content(json);
 
-		mockMvc.perform(request).andExpect(status().isCreated()).andExpect(jsonPath("id").value("1L"))
-				.andExpect(jsonPath("title").value(dto.getTitle())).andExpect(jsonPath("author").value(dto.getAuthor()))
+		mockMvc.perform(request).andExpect(status().isCreated())
+				.andExpect(jsonPath("id").value(1L))
+				.andExpect(jsonPath("title").value(dto.getTitle()))
+				.andExpect(jsonPath("autor").value(dto.getAutor()))
 				.andExpect(jsonPath("isbn").value(dto.getIsbn()));
 
 	}
@@ -95,9 +99,36 @@ public class BookControllerTests {
 		
 	}
 	
+	@Test
+	@DisplayName("Deve obter informacoes de um livro")
+	public void getBookDetailsTest() throws Exception {
+		
+		Long id = 1L;
+		Book book = Book.builder().id(id)
+				.title(createNewBook().getTitle())
+				.autor(createNewBook().getAutor())
+				.isbn(createNewBook().getIsbn())
+				.build();
+		
+		BDDMockito.given(service.getById(id)).willReturn(Optional.of(book));
+		
+		//execução
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(BOOK_API.concat("/"+id))
+		.accept(MediaType.APPLICATION_JSON);
+		
+		mockMvc
+			.perform(request)
+			.andExpect(status().isOk() )
+			.andExpect(jsonPath("id").value(id))
+			.andExpect(jsonPath("title").value(createNewBook().getTitle()))
+			.andExpect(jsonPath("autor").value(createNewBook().getAutor()))
+			.andExpect(jsonPath("isbn").value(createNewBook().getIsbn()));
+
+			
+	}
 	
 	
 	private BookDTO createNewBook() {
-		return BookDTO.builder().author("Fernando").title("As aventuras ").isbn("001").build();
+		return BookDTO.builder().autor("Fernando").title("As aventuras ").isbn("001").build();
 	}
 }
