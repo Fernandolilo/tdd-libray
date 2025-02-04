@@ -1,5 +1,6 @@
 package com.systempro.library.controller;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -141,6 +142,20 @@ public class BookControllerTests {
 		mockMvc
 		.perform(request)
 		.andExpect(status().isNotFound() );
+		
+	}
+	
+	@Test
+	@DisplayName("Deve deletar um book")
+	public void deleteBookTest() throws Exception {
+		
+		BDDMockito.given(service.getById(anyLong())).willReturn(Optional.of(Book.builder().id(1L).build()));
+		//execução
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete(BOOK_API.concat("/"+ 1))
+		.accept(MediaType.APPLICATION_JSON);
+		
+		mockMvc.perform(request) 
+			.andExpect( status().isNoContent());
 		
 	}
 	
