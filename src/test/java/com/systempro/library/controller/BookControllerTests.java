@@ -208,7 +208,22 @@ public class BookControllerTests {
 	
 	@Test
 	@DisplayName("Deve retornar um 404 ao tentar atualizar um book inexistente")
-	public void updateBookInexistsTest() {
+	public void updateBookInexistsTest() throws Exception {
+		
+		String json =new ObjectMapper().writeValueAsString(createNewBook());
+		
+		
+		
+		BDDMockito.given(service.getById(Mockito.anyLong())).willReturn(Optional.empty());
+		//execução
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put(BOOK_API.concat("/"+ 1))
+				.content(json)
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(json)
+		;
+		
+		mockMvc.perform(request) 
+			.andExpect( status().isNotFound());
 		
 	}
 	private BookDTO createNewBook() {
