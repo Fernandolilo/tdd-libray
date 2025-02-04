@@ -160,6 +160,21 @@ public class BookControllerTests {
 	}
 	
 	
+	@Test
+	@DisplayName("Deve retormar resource not found ao deletar um book inexistente")
+	public void deleteBookNotFoundTest() throws Exception {
+		
+		BDDMockito.given(service.getById(anyLong())).willReturn(Optional.empty());
+		//execução
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete(BOOK_API.concat("/"+ 1))
+		.accept(MediaType.APPLICATION_JSON);
+		
+		mockMvc.perform(request) 
+			.andExpect( status().isNotFound());
+		
+	}
+	
+	
 	private BookDTO createNewBook() {
 		return BookDTO.builder().autor("Fernando").title("As aventuras ").isbn("001").build();
 	}
