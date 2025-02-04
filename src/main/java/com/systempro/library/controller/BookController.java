@@ -73,7 +73,7 @@ public class BookController {
 		book.setAutor(dto.getAutor());
 		book.setTitle(dto.getTitle());
 		
-		service.update(book);
+		book = service.update(book);
 		
 		return mapper.map(book, BookDTO.class);
 	}

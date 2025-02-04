@@ -50,7 +50,7 @@ public class BookControllerTests {
 		BookDTO dto = createNewBook();
 
 		// instacia de mock para test, salvar novo book, simular o save do service
-		Book savedBook = Book.builder().id(1L).autor("Fernando").title("As aventuras ").isbn("001").build();
+		Book savedBook = Book.builder().id(1L).autor("Fernando").title("As aventuras").isbn("001").build();
 		BDDMockito.given(service.save(Mockito.any(Book.class))).willReturn(savedBook);
 
 		String json = new ObjectMapper().writeValueAsString(dto);
@@ -176,26 +176,25 @@ public class BookControllerTests {
 	
 	@Test
 	@DisplayName("Deve atualizar um book")
-	public void updateBookTest() throws Exception {
-		
+	public void updateBookTest() throws Exception {		
 		Long id = 1L;
 		String json =new ObjectMapper().writeValueAsString(createNewBook());
 		
 		//busca um livro no servior por um mock
-		Book updateBook = Book.builder()
-				.id(1L)
-				.title("some title")
-				.autor("some autor")
-				.isbn("some isbn")
-				.build();
+		Book updatingBook = Book.builder().id(1L).title("some title").autor("some autor").isbn("001").build();
 		
-		BDDMockito.given(service.getById(id)).willReturn(Optional
-				.of(updateBook));
+		BDDMockito.given(service.getById(id)).willReturn(Optional.of(updatingBook));
+		
+		Book bookUpdateBuilder = Book.builder().id(id).autor("Fernando").title("As aventuras").isbn("001").build();
+		
+		BDDMockito.given(service.update(updatingBook)).willReturn(bookUpdateBuilder);
+		
 		//execução
-		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put(BOOK_API.concat("/"+ 1))
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+				.put(BOOK_API.concat("/"+ 1))
 				.content(json)
 				.accept(MediaType.APPLICATION_JSON)
-				.contentType(json)
+				.contentType(MediaType.APPLICATION_JSON)
 		;
 		
 		mockMvc.perform(request) 
@@ -227,6 +226,6 @@ public class BookControllerTests {
 		
 	}
 	private BookDTO createNewBook() {
-		return BookDTO.builder().autor("Fernando").title("As aventuras ").isbn("001").build();
+		return BookDTO.builder().autor("Fernando").title("As aventuras").isbn("001").build();
 	}
 }
