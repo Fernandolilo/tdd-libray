@@ -35,4 +35,10 @@ public class BookServiceImp implements BookService {
 		
 	}
 
+	@Override
+	public Book update(Book book) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
