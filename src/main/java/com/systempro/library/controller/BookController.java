@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.service.annotation.GetExchange;
 
 import com.systempro.library.dto.BookDTO;
@@ -54,8 +56,12 @@ public class BookController {
 	
 	@GetMapping("/{id}")
 	public BookDTO getById(@PathVariable Long id) {
-		Book book = service.getById(id).get();
-		return mapper.map(book, BookDTO.class);
+		return service
+				.getById(id)
+				.map(book -> mapper.map(book, BookDTO.class) )
+				.orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND))
+				;
+		
 	}
 	
 	
