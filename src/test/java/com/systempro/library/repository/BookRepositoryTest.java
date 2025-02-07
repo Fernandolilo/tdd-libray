@@ -91,7 +91,7 @@ public class BookRepositoryTest {
 
 	@Test
 	@DisplayName("Deve deletar um livro")
-	public void deleteBook() {
+	public void deleteBookTest() {
 		// cenario
 		Book book = createNewBook("123");
 		//preciso persistir ele primeiro.
