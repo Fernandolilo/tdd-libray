@@ -77,20 +77,41 @@ public class BookRepositoryTest {
 
 	}
 
-	
 	@Test
 	@DisplayName("Deve salvar um livro")
 	public void savedBook() {
 		// cenario
 		Book book = createNewBook("123");
-		
+
 		Book saveBook = repository.save(book);
-		
+
 		assertThat(saveBook.getId()).isNotNull();
-		
-		
+
 	}
-	
+
+	@Test
+	@DisplayName("Deve deletar um livro")
+	public void deleteBook() {
+		// cenario
+		Book book = createNewBook("123");
+		//preciso persistir ele primeiro.
+		entityManager.persist(book);
+
+		//buscar o livro
+		Book founfBook = entityManager.find(Book.class, book.getId());
+
+		//deletar o livro 
+		repository.delete(founfBook);
+
+		//verificar se foi deletado
+		Book deleteBook = entityManager.find(Book.class, book.getId());
+		
+		//assegurar que esta nulo com a deleção, posso fazer desta forma ou a forma de baixo que ja economiza linha de cod;
+		assertThat(deleteBook).isNull();
+		
+		assertThat(entityManager.find(Book.class, book.getId())).isNull();
+	}
+
 	private Book createNewBook(String isbn) {
 		return Book.builder().autor("Fernando").title("As aventuras ").isbn(isbn).build();
 	}
