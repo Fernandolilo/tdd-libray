@@ -4,9 +4,9 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Arrays;
 import java.util.Optional;
 
-import org.assertj.core.util.Arrays;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -233,7 +233,7 @@ public class BookControllerTests {
 	
 	@Test
 	@DisplayName("deve filtrar livros")
-	public void findBooksTests() {
+	public void findBooksTests() throws Exception {
 		
 		//cenario
 		Long id = 1L;
@@ -246,17 +246,16 @@ public class BookControllerTests {
 				.build();
 		
 		// Definindo comportamento do mock
-        BDDMockito.given(service.find(Mockito.any(Book.class), Mockito.any(Pageable.class)))
-                .willReturn(new PageImpl<>(Arrays.asList(book), PageRequest.of(0, 100), 1));	
+		BDDMockito.given(service.find(Mockito.any(Book.class), Mockito.any(Pageable.class)))
+	    .willReturn(new PageImpl<Book>(Arrays.asList(book), PageRequest.of(0, 100), 1L));
+
         
         
         
         //  String queryString = String.format("?title=%s&autor=%s&page=0&size=100", book.getTitle(), book.getAutor());
 		//estamos fazendo uma interpolação, ?title=% == book.getTitle(), &autor=%s == book.getAutor());
         
-        String queryString = String.format("book.getTitle(), book.getAutor());&autor=%s&page=0&size=100", 
-        		book.getTitle(), book.getAutor());
-        
+        String queryString = String.format("?title=%s&autor=%s&page=0&size=100", book.getTitle(), book.getAutor());
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
         	.get(BOOK_API.concat(queryString))
         	.accept(MediaType.APPLICATION_JSON);
@@ -265,8 +264,8 @@ public class BookControllerTests {
         .andExpect( status().isOk())
         .andExpect( jsonPath("content", Matchers.hasSize(1)))
         .andExpect( jsonPath("totalElements").value(1) )
-        .andExpect(jsonPath("pageable.pagesize").value(100))
-        .andExpect(jsonPath("pageable.pageNumber").value(0))
+        .andExpect( jsonPath("pageable.pagesize").value(100))
+        .andExpect( jsonPath("pageable.pageNumber").value(0))
         
         ;
 	}
