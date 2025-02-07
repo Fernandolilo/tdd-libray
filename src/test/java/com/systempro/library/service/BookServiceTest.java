@@ -116,14 +116,11 @@ public class BookServiceTest {
 	public void notFoundByIdTest() {
 		
 		//cenario
-		Long id = 1L;		
-		
+		Long id = 1L;				
 		Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
 		
-		//exec
-		
-		Optional<Book> foundBook = service.getById(id);
-		
+		//exec		
+		Optional<Book> foundBook = service.getById(id);		
 		
 		//verificaçoes
 		

@@ -2,6 +2,8 @@ package com.systempro.library.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +33,7 @@ public class BookRepositoryTest {
 		
 		//cenario
 		String isbn = "123";
-		Book book = Book.builder().autor("Fernando").title("As aventuras ").isbn(isbn).build();
+		Book book = createNewBook(isbn);
 		entityManager.persist(book);
 		
 		//execução
@@ -42,6 +44,8 @@ public class BookRepositoryTest {
 		
 		assertThat(exists).isTrue();
 	}
+
+	
 	
 	@Test
 	@DisplayName("Deve retornar false quando não existir um livro na base com ISBN informado")
@@ -50,12 +54,34 @@ public class BookRepositoryTest {
 		//cenario
 		String isbn = "123";
 	
-		//execução
-		
+		//execução	
 		
 		boolean exists = repository.existsByIsbn(isbn);
 		//verificação
 		
 		assertThat(exists).isFalse();
+	}
+	
+	//test de integração
+	
+	@Test
+	@DisplayName("Deve obter um livro por ID")
+	public void findByIdTest() {
+		//cenario
+		Book book = createNewBook("123");
+		//neste caso para eu encontrar um book por id, preciso persistir ele primeiro.
+		entityManager.persist(book);
+		
+		//exec
+		Optional<Book> foundBook = repository.findById(book.getId());
+		
+		//verificacao
+		
+		assertThat( foundBook.isPresent() ).isTrue();		
+		
+	}
+	
+	private Book createNewBook(String isbn) {
+		return Book.builder().autor("Fernando").title("As aventuras ").isbn(isbn).build();
 	}
 }
