@@ -19,7 +19,7 @@ public class BookServiceImp implements BookService {
 
 	@Override
 	public Book save(Book book) {
-		if(repository.existsByIsbn(book.getIsbn()) ) {
+		if (repository.existsByIsbn(book.getIsbn())) {
 			throw new BusinessException("ISBN ja cadastrado");
 		}
 		return repository.save(book);
@@ -32,13 +32,20 @@ public class BookServiceImp implements BookService {
 
 	@Override
 	public void delete(Book book) {
-		
+
+		if (book == null || book.getId() == null) {
+			throw new IllegalArgumentException("Book id cant be null");
+		}
+		this.repository.delete(book);
 	}
 
 	@Override
 	public Book update(Book book) {
 		// TODO Auto-generated method stub
-		return book;
+		if (book == null || book.getId() == null) {
+			throw new IllegalArgumentException("Book id cant be null");
+		}
+		return this.repository.save(book);
 	}
 
 }

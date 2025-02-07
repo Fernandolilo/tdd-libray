@@ -22,64 +22,61 @@ public class BookRepositoryTest {
 
 	@Autowired
 	TestEntityManager entityManager;
-	
+
 	@Autowired
 	BookRepository repository;
-	
-	
+
 	@Test
 	@DisplayName("Deve retornar verdadeiro quando existir um livro na base com ISBN informado")
 	public void returnTrueWhenIsbnExists() {
-		
-		//cenario
+
+		// cenario
 		String isbn = "123";
 		Book book = createNewBook(isbn);
 		entityManager.persist(book);
-		
-		//execução
-		
-		
+
+		// execução
+
 		boolean exists = repository.existsByIsbn(isbn);
-		//verificação
-		
+		// verificação
+
 		assertThat(exists).isTrue();
 	}
 
-	
-	
 	@Test
 	@DisplayName("Deve retornar false quando não existir um livro na base com ISBN informado")
 	public void returnFalseWhenIsbnDoesExists() {
-		
-		//cenario
+
+		// cenario
 		String isbn = "123";
-	
-		//execução	
-		
+
+		// execução
+
 		boolean exists = repository.existsByIsbn(isbn);
-		//verificação
-		
+		// verificação
+
 		assertThat(exists).isFalse();
 	}
-	
-	//test de integração
-	
+
+	// test de integração
+
 	@Test
 	@DisplayName("Deve obter um livro por ID")
 	public void findByIdTest() {
-		//cenario
+		// cenario
 		Book book = createNewBook("123");
-		//neste caso para eu encontrar um book por id, preciso persistir ele primeiro.
+		// neste caso para eu encontrar um book por id, preciso persistir ele primeiro.
 		entityManager.persist(book);
-		
-		//exec
+
+		// exec
 		Optional<Book> foundBook = repository.findById(book.getId());
-		
-		//verificacao
-		
-		assertThat( foundBook.isPresent() ).isTrue();		
-		
+
+		// verificacao
+
+		assertThat(foundBook.isPresent()).isTrue();
+
 	}
+
 	
 	private Book createNewBook(String isbn) {
 		return Book.builder().autor("Fernando").title("As aventuras ").isbn(isbn).build();

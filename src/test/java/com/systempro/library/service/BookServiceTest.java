@@ -40,9 +40,9 @@ public class BookServiceTest {
 	public void saveBookTest() {
 		// cenario
 		Book book = createValidBook();
-		
+
 		// usar o Mocktio para simular um salvamento, passando uma string qualquer e
-		//passando o default de boolean é false
+		// passando o default de boolean é false
 		Mockito.when(repository.existsByIsbn(Mockito.anyString())).thenReturn(false);
 
 		Mockito.when(repository.save(book))
@@ -85,51 +85,75 @@ public class BookServiceTest {
 
 	}
 
-	
 	@Test
 	@DisplayName("Buscar por ID")
 	public void findByIdTest() {
-		
-		//cenario
-		Long id = 1L;		
+
+		// cenario
+		Long id = 1L;
 		Book book = createValidBook();
-		book.setId(id);	
+		book.setId(id);
 		Mockito.when(repository.findById(id)).thenReturn(Optional.of(book));
-		
-		//exec
-		
+
+		// exec
+
 		Optional<Book> foundBook = service.getById(id);
-		
-		
-		//verificaçoes
-		
-		assertThat(foundBook.isPresent() ).isTrue();
+
+		// verificaçoes
+
+		assertThat(foundBook.isPresent()).isTrue();
 		assertThat(foundBook.get().getId()).isEqualTo(id);
 		assertThat(foundBook.get().getAutor()).isEqualTo(book.getAutor());
 		assertThat(foundBook.get().getTitle()).isEqualTo(book.getTitle());
 		assertThat(foundBook.get().getIsbn()).isEqualTo(book.getIsbn());
-		
+
 	}
-	
+
 	@Test
 	@DisplayName("Deve retornar vazio ao buscar um livro pro ID quando nãoexistir")
 	public void notFoundByIdTest() {
-		
-		//cenario
-		Long id = 1L;				
+
+		// cenario
+		Long id = 1L;
 		Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
-		
-		//exec		
-		Optional<Book> foundBook = service.getById(id);		
-		
-		//verificaçoes
-		
-		assertThat(foundBook.isPresent() ).isFalse();
-		
+
+		// exec
+		Optional<Book> foundBook = service.getById(id);
+
+		// verificaçoes
+
+		assertThat(foundBook.isPresent()).isFalse();
+
 	}
-	
-	
-	
+
+	@Test
+	@DisplayName("Deve deletar um book")
+	public void deleteBookTest() {
+		// cenario
+		Book book = Book.builder().id(1L).build();
+
+		// exec
+
+		org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> service.delete(book));
+
+		// verificacoes
+		Mockito.verify(repository, Mockito.times(1)).delete(book);
+
+	}
+
+	@Test
+	@DisplayName("Deve ocorrer um erro ao tentar deletar um book inexistente")
+	public void invalidDeleteBookTest() {
+		// cenario
+		Book book = new Book();
+
+		org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> service.delete(book));
+
+		// verificacoes
+		Mockito.verify(repository, Mockito.never()).delete(book);
+
+	}
+
 	private Book createValidBook() {
 		return Book.builder().autor("Fulano").title("As aventuras").isbn("001").build();
 	}
