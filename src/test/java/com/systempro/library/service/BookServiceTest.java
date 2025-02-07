@@ -1,7 +1,10 @@
 package com.systempro.library.service;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.refEq;
+
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,6 +85,54 @@ public class BookServiceTest {
 
 	}
 
+	
+	@Test
+	@DisplayName("Buscar por ID")
+	public void findByIdTest() {
+		
+		//cenario
+		Long id = 1L;		
+		Book book = createValidBook();
+		book.setId(id);	
+		Mockito.when(repository.findById(id)).thenReturn(Optional.of(book));
+		
+		//exec
+		
+		Optional<Book> foundBook = service.getById(id);
+		
+		
+		//verificaçoes
+		
+		assertThat(foundBook.isPresent() ).isTrue();
+		assertThat(foundBook.get().getId()).isEqualTo(id);
+		assertThat(foundBook.get().getAutor()).isEqualTo(book.getAutor());
+		assertThat(foundBook.get().getTitle()).isEqualTo(book.getTitle());
+		assertThat(foundBook.get().getIsbn()).isEqualTo(book.getIsbn());
+		
+	}
+	
+	@Test
+	@DisplayName("Deve retornar vazio ao buscar um livro pro ID quando nãoexistir")
+	public void notFoundByIdTest() {
+		
+		//cenario
+		Long id = 1L;		
+		
+		Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
+		
+		//exec
+		
+		Optional<Book> foundBook = service.getById(id);
+		
+		
+		//verificaçoes
+		
+		assertThat(foundBook.isPresent() ).isFalse();
+		
+	}
+	
+	
+	
 	private Book createValidBook() {
 		return Book.builder().autor("Fulano").title("As aventuras").isbn("001").build();
 	}

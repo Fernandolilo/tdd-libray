@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.systempro.library.entity.Book;
 
 @Repository
-public interface BookRepository extends JpaRepository<Book, String>{
+public interface BookRepository extends JpaRepository<Book, Long>{
 
 	boolean existsByIsbn(String isbn);
 
