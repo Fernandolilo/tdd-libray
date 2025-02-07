@@ -78,6 +78,19 @@ public class BookRepositoryTest {
 	}
 
 	
+	@Test
+	@DisplayName("Deve salvar um livro")
+	public void savedBook() {
+		// cenario
+		Book book = createNewBook("123");
+		
+		Book saveBook = repository.save(book);
+		
+		assertThat(saveBook.getId()).isNotNull();
+		
+		
+	}
+	
 	private Book createNewBook(String isbn) {
 		return Book.builder().autor("Fernando").title("As aventuras ").isbn(isbn).build();
 	}
