@@ -255,7 +255,8 @@ public class BookControllerTests {
         //  String queryString = String.format("?title=%s&autor=%s&page=0&size=100", book.getTitle(), book.getAutor());
 		//estamos fazendo uma interpolação, ?title=% == book.getTitle(), &autor=%s == book.getAutor());
         
-        String queryString = String.format("?title=%s&autor=%s&page=0&size=100", book.getTitle(), book.getAutor());
+		String queryString = String.format("?title=%s&autor=%s&page=0&size=100", book.getTitle(), book.getAutor());
+
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
         	.get(BOOK_API.concat(queryString))
         	.accept(MediaType.APPLICATION_JSON);
@@ -264,7 +265,7 @@ public class BookControllerTests {
         .andExpect( status().isOk())
         .andExpect( jsonPath("content", Matchers.hasSize(1)))
         .andExpect( jsonPath("totalElements").value(1) )
-        .andExpect( jsonPath("pageable.pagesize").value(100))
+        .andExpect( jsonPath("pageable.pageSize").value(100))
         .andExpect( jsonPath("pageable.pageNumber").value(0))
         
         ;
