@@ -1,18 +1,23 @@
 package com.systempro.library.service;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.refEq;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -192,9 +197,35 @@ public class BookServiceTest {
 		assertThat(book.getTitle()).isEqualTo(updateBook.getTitle());
 		assertThat(book.getIsbn()).isEqualTo(updateBook.getIsbn());
 		
+	}
+	
+	
+	@Test
+	@DisplayName("Deve filtrar livro pela propriedade")
+	public void findBookTest() {
+		//cenario
+		Book book = createValidBook();
 		
+		PageRequest pageRequest = PageRequest.of(0, 10);
 		
+		List<Book> bookList = new ArrayList<Book>(); // Lista do tipo correto
+
+		Page<Book> page = new PageImpl<>(bookList, pageRequest, 1);
 		
+		//Page<Book> pages = new PageImpl<Book>( Arrays.asList(book), PageRequest.of(0, 10), 1);
+		
+		Mockito.when(repository.findAll(Mockito.any(Example.class), Mockito.any(PageRequest.class)))
+		   .thenReturn(page);
+		
+		//execução
+		Page<Book> result = service.find(book, pageRequest);
+		
+		//verificação
+		assertThat(result.getTotalElements()).isEqualTo(1);
+		assertThat(result.getContent()).isEqualTo(bookList);
+		assertThat(result.getPageable().getPageNumber()).isEqualTo(0);
+		assertThat(result.getPageable().getPageSize()).isEqualTo(10);
+
 	}
 	
 	
