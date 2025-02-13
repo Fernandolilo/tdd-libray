@@ -1,5 +1,7 @@
 package com.systempro.library.controller;
 
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -35,7 +38,7 @@ import com.systempro.library.service.LoanService;
 @AutoConfigureMockMvc
 public class LoanContollerTest {
 	
-	static String LOAN_API = "/loans";
+	static String LOAN_API = "/loans/";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -78,7 +81,7 @@ public class LoanContollerTest {
 		
 		mockMvc.perform(request)
 			.andExpect(status().isCreated())
-			.andExpect(jsonPath("id").value(1L))
+			.andExpect(content().string("1") )
 			
 			;
 			
