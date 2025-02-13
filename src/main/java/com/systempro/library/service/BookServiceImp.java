@@ -65,4 +65,10 @@ public class BookServiceImp implements BookService {
 		return repository.findAll(example, pageRequest);
 	}
 
+	@Override
+	public Optional<Book> getBookByIsbn(String isbn) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
+	}
+
 }
