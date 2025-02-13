@@ -24,7 +24,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.systempro.library.dto.LoanDTO;
 import com.systempro.library.entity.Book;
+import com.systempro.library.entity.Loan;
 import com.systempro.library.service.BookService;
+import com.systempro.library.service.LoanService;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -39,6 +41,10 @@ public class LoanContollerTest {
 
 	@MockBean
     private BookService bookService;
+	
+	@MockBean
+    private  LoanService loanService;
+	
 	@Test
 	@DisplayName("Deve realizar um emprestimo")
 	public void createLoanTets() throws Exception {
@@ -49,6 +55,9 @@ public class LoanContollerTest {
 		
 		
 		BDDMockito.given( bookService.getBookByIsbn("123")).willReturn(Optional.of(Book.builder().id(1L).isbn("123").build()));
+		
+		
+		Loan loan = null;
 		
 		BDDMockito.given(loanService.save(Mockito.any(Loan.class))).willReturn(loan);
 		
