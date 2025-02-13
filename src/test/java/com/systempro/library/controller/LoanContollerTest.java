@@ -3,6 +3,7 @@ package com.systempro.library.controller;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -48,16 +49,25 @@ public class LoanContollerTest {
 	@Test
 	@DisplayName("Deve realizar um emprestimo")
 	public void createLoanTets() throws Exception {
+		//cenario
 		
 		LoanDTO dto = LoanDTO.builder().isbn("123").customer("Fulano").build();		
 		
 		String json = new ObjectMapper().writeValueAsString(dto);
 		
 		
-		BDDMockito.given( bookService.getBookByIsbn("123")).willReturn(Optional.of(Book.builder().id(1L).isbn("123").build()));
+		Book book = Book.builder().id(1L).isbn("123").build();
+		
+		BDDMockito.given( bookService.getBookByIsbn("123")).willReturn(Optional.of(book));
 		
 		
-		Loan loan = null;
+		Loan loan = Loan.builder()
+				.id(1l)
+				.customer("Fulano")
+				.instante(LocalDate.now())
+				.retunear(true)
+				.book(book)
+				.build();
 		
 		BDDMockito.given(loanService.save(Mockito.any(Loan.class))).willReturn(loan);
 		
