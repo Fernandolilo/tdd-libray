@@ -1,13 +1,15 @@
 package com.systempro.library.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -226,6 +228,27 @@ public class BookServiceTest {
 		assertThat(result.getPageable().getPageNumber()).isEqualTo(0);
 		assertThat(result.getPageable().getPageSize()).isEqualTo(10);
 
+	}
+	@Test
+	@DisplayName("Deve obter um livro pelo isbn")
+	public void getBookIsbnTest() {
+		
+		//cenario
+		String isbn = "123";		
+		when(repository.findByIsbn(isbn)).thenReturn(Optional.of(Book.builder().id(1L).isbn(isbn).build()));
+		
+		//exec
+		Optional<Book> request = service.getBookByIsbn(isbn);
+		
+		//verificacaos
+		assertThat(request.isPresent());
+		
+		assertThat(request.get().getId()).isEqualTo(1L);
+		assertThat(request.get().getIsbn()).isEqualTo(isbn);
+
+		verify(repository, times(1)).findByIsbn(isbn);
+		
+		
 	}
 	
 	
