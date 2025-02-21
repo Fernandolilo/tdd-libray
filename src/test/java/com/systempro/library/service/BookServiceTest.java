@@ -26,6 +26,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.systempro.library.entity.Book;
 import com.systempro.library.exceptions.BusinessException;
 import com.systempro.library.repository.BookRepository;
+import com.systempro.library.service.imp.BookServiceImp;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
