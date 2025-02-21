@@ -112,7 +112,7 @@ public class BookRepositoryTest {
 		assertThat(entityManager.find(Book.class, book.getId())).isNull();
 	}
 
-	private Book createNewBook(String isbn) {
+	private  Book createNewBook(String isbn) {
 		return Book.builder().autor("Fernando").title("As aventuras ").isbn(isbn).build();
 	}
 }
