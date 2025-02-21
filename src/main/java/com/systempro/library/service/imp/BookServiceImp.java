@@ -1,4 +1,4 @@
-package com.systempro.library.service;
+package com.systempro.library.service.imp;
 
 import java.util.Optional;
 
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.systempro.library.entity.Book;
 import com.systempro.library.exceptions.BusinessException;
 import com.systempro.library.repository.BookRepository;
+import com.systempro.library.service.BookService;
 
 @Service
 public class BookServiceImp implements BookService {

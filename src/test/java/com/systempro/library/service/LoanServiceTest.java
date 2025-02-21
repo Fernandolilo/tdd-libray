@@ -16,6 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.systempro.library.entity.Book;
 import com.systempro.library.entity.Loan;
 import com.systempro.library.repository.LoanRepository;
+import com.systempro.library.service.imp.LoanServiceImp;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
