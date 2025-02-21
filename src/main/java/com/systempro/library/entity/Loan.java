@@ -23,7 +23,7 @@ public class Loan {
     private Long id;
     private String customer;
     private LocalDate instante;
-    private Boolean retunear;
+    private Boolean returned;
     private Book book;
     
 

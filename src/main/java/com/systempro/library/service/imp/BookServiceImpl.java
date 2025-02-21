@@ -14,11 +14,11 @@ import com.systempro.library.repository.BookRepository;
 import com.systempro.library.service.BookService;
 
 @Service
-public class BookServiceImp implements BookService {
+public class BookServiceImpl implements BookService {
 
 	private final BookRepository repository;
 
-	public BookServiceImp(BookRepository repository) {
+	public BookServiceImpl(BookRepository repository) {
 		this.repository = repository;
 	}
 

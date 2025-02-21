@@ -62,7 +62,7 @@ public class LoanContollerTest {
 
 		BDDMockito.given(bookService.getBookByIsbn("123")).willReturn(Optional.of(book));
 
-		Loan loan = Loan.builder().id(1l).customer("Fulano").instante(LocalDate.now()).retunear(true).book(book)
+		Loan loan = Loan.builder().id(1l).customer("Fulano").instante(LocalDate.now()).returned(true).book(book)
 				.build();
 
 		BDDMockito.given(loanService.save(Mockito.any(Loan.class))).willReturn(loan);

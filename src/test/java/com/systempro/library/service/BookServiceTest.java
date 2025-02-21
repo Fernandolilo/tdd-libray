@@ -26,7 +26,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.systempro.library.entity.Book;
 import com.systempro.library.exceptions.BusinessException;
 import com.systempro.library.repository.BookRepository;
-import com.systempro.library.service.imp.BookServiceImp;
+import com.systempro.library.service.imp.BookServiceImpl;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -40,7 +40,7 @@ public class BookServiceTest {
 	@BeforeEach // @BeforeEach faz com que este metodo seja execultado antes de qualquer teste
 				// em minha class
 	public void setUp() {
-		this.service = new BookServiceImp(repository);
+		this.service = new BookServiceImpl(repository);
 	}
 
 	@Test
