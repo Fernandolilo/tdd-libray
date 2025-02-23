@@ -1,6 +1,5 @@
 package com.systempro.library.service;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.Mockito.never;
@@ -29,7 +28,7 @@ import com.systempro.library.service.imp.LoanServiceImpl;
 @ActiveProfiles("test")
 public class LoanServiceTest {
 
-	 LoanService service;
+	LoanService service;
 
 	@MockBean
 	LoanRepository repository;
@@ -65,66 +64,76 @@ public class LoanServiceTest {
 	@Test
 	@DisplayName("Deve lançar erro de negocio ao salvar um emprestimo ja emprestado")
 	public void invalidSaveLoanTest() {
-				
+
 		Loan savingLoan = createLoan();
-		
+
 		when(repository.existsByBookAndNotReturned(savingLoan.getBook())).thenReturn(true);
 
-		 // When (execução)
-        Throwable exception = catchException(() -> service.save(savingLoan));
+		// When (execução)
+		Throwable exception = catchException(() -> service.save(savingLoan));
 
-        // Then (verificação)
-        assertThat(exception)
-            .isInstanceOf(BusinessException.class)
-            .hasMessage("Book already loaned");
+		// Then (verificação)
+		assertThat(exception).isInstanceOf(BusinessException.class).hasMessage("Book already loaned");
 
-        // Garante que o método save NUNCA é chamado se a exceção for lançada
-        verify(repository, never()).save(savingLoan);
+		// Garante que o método save NUNCA é chamado se a exceção for lançada
+		verify(repository, never()).save(savingLoan);
 	}
 
-	
-	
 	@Test
 	@DisplayName("Deve obter as informações de um emprestimo pelo ID")
 	public void getLoanDatailsTest() {
-		//cenario
-		
+		// cenario
+
 		Long id = 1L;
-		
+
 		Loan loan = createLoan();
 		loan.setId(id);
-		
-		Mockito.when( repository.findById(id) ).thenReturn(Optional.of(loan) );
-		
-		//exec
+
+		Mockito.when(repository.findById(id)).thenReturn(Optional.of(loan));
+
+		// exec
 		Optional<Loan> result = service.getById(id);
-		
-		//verificacai
-		
+
+		// verificacai
+
 		assertThat(result.isPresent()).isTrue();
-		
+
 		assertThat(result.get().getId()).isEqualTo(id);
 		assertThat(result.get().getCustomer()).isEqualTo(loan.getCustomer());
 		assertThat(result.get().getBook()).isEqualTo(loan.getBook());
 		assertThat(result.get().getInstante()).isEqualTo(loan.getInstante());
-		
+
 		verify(repository).findById(id);
 	}
-	
-	
-	
-	
+
+	@Test
+	@DisplayName("Deve atualiar um emprestimo")
+	public void updateLoanTest() {
+
+		// cenario
+
+		Loan loan = createLoan();
+		loan.setId(1L);
+		loan.setReturned(true);
+		
+		//mock para verificação simples
+		when(repository.save(loan)).thenReturn( loan );
+		
+		Loan updatedloan = service.update(loan);
+		
+		assertThat(updatedloan.getReturned()).isTrue();
+		
+		verify( repository).save(loan);
+		
+	}
+
 	private Loan createLoan() {
-		
+
 		Book book = Book.builder().id(1L).build();
-		
+
 		String customer = "Fulano";
 
-		return Loan.builder()
-				.book(book)
-				.customer(customer)
-				.instante(LocalDate.now())
-				.build();
-		
+		return Loan.builder().book(book).customer(customer).instante(LocalDate.now()).build();
+
 	}
 }
