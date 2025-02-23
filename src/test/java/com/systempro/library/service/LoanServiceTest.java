@@ -107,6 +107,8 @@ public class LoanServiceTest {
 		assertThat(result.get().getCustomer()).isEqualTo(loan.getCustomer());
 		assertThat(result.get().getBook()).isEqualTo(loan.getBook());
 		assertThat(result.get().getInstante()).isEqualTo(loan.getInstante());
+		
+		verify(repository).findById(id);
 	}
 	
 	
