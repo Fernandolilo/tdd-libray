@@ -8,11 +8,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -63,16 +65,10 @@ public class LoanServiceTest {
 	@Test
 	@DisplayName("Deve lançar erro de negocio ao salvar um emprestimo ja emprestado")
 	public void invalidSaveLoanTest() {
-		Book book = Book.builder().id(1L).build();
-		String customer = "Fulano";
-
-		Loan savingLoan = Loan.builder()
-				.book(book)
-				.customer(customer)
-				.instante(LocalDate.now())
-				.build();
+				
+		Loan savingLoan = createLoan();
 		
-		when(repository.existsByBookAndNotReturned(book)).thenReturn(true);
+		when(repository.existsByBookAndNotReturned(savingLoan.getBook())).thenReturn(true);
 
 		 // When (execução)
         Throwable exception = catchException(() -> service.save(savingLoan));
@@ -84,5 +80,49 @@ public class LoanServiceTest {
 
         // Garante que o método save NUNCA é chamado se a exceção for lançada
         verify(repository, never()).save(savingLoan);
+	}
+
+	
+	
+	@Test
+	@DisplayName("Deve obter as informações de um emprestimo pelo ID")
+	public void getLoanDatailsTest() {
+		//cenario
+		
+		Long id = 1L;
+		
+		Loan loan = createLoan();
+		loan.setId(id);
+		
+		Mockito.when( repository.findById(id) ).thenReturn(Optional.of(loan) );
+		
+		//exec
+		Optional<Loan> result = service.getById(id);
+		
+		//verificacai
+		
+		assertThat(result.isPresent()).isTrue();
+		
+		assertThat(result.get().getId()).isEqualTo(id);
+		assertThat(result.get().getCustomer()).isEqualTo(loan.getCustomer());
+		assertThat(result.get().getBook()).isEqualTo(loan.getBook());
+		assertThat(result.get().getInstante()).isEqualTo(loan.getInstante());
+	}
+	
+	
+	
+	
+	private Loan createLoan() {
+		
+		Book book = Book.builder().id(1L).build();
+		
+		String customer = "Fulano";
+
+		return Loan.builder()
+				.book(book)
+				.customer(customer)
+				.instante(LocalDate.now())
+				.build();
+		
 	}
 }
