@@ -1,5 +1,6 @@
 package com.systempro.library.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,8 +25,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.systempro.library.dto.LoanDTO;
+import com.systempro.library.dto.ReturnedLoanDTO;
 import com.systempro.library.entity.Book;
 import com.systempro.library.entity.Loan;
 import com.systempro.library.exceptions.BusinessException;
@@ -104,11 +107,22 @@ public class LoanContollerTest {
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(LOAN_API).accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON).content(json);
 
-		mockMvc.perform(request)
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("errors", Matchers.hasSize(1)))
+		mockMvc.perform(request).andExpect(status().isBadRequest()).andExpect(jsonPath("errors", Matchers.hasSize(1)))
 				.andExpect(jsonPath("errors[0]").value("Book already loaned"));
 		;
+	}
+
+	@Test
+	@DisplayName("Deve retornar um livro")
+	public void returnBookTest() throws Exception {
+
+		// cenario
+		ReturnedLoanDTO dto = ReturnedLoanDTO.builder().returned(true).build();
+
+		String json = new ObjectMapper().writeValueAsString(dto);
+
+		mockMvc.perform(patch(LOAN_API.concat("1")).accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isOk());
 	}
 
 }
