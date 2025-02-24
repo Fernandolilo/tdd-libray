@@ -2,8 +2,11 @@ package com.systempro.library.service.imp;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.systempro.library.dto.LoanFilterDTO;
 import com.systempro.library.entity.Loan;
 import com.systempro.library.exceptions.BusinessException;
 import com.systempro.library.repository.LoanRepository;
@@ -38,6 +41,12 @@ public class LoanServiceImpl implements LoanService {
 		return repository.save(loan);
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Page<Loan> find(LoanFilterDTO filter, Pageable pageble) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 
