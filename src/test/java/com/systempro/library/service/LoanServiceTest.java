@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -147,7 +148,7 @@ public class LoanServiceTest {
 		
 		PageRequest pageRequest = PageRequest.of(0, 10);
 		
-		List<Loan> loanList = new ArrayList<Loan>(); // Lista do tipo correto
+		List<Loan> loanList = Arrays.asList(loan); // Lista do tipo correto
 
 		Page<Loan> page = new PageImpl<>(loanList, pageRequest, loanList.size());
 		

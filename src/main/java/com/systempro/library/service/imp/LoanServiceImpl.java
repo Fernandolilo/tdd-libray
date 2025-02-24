@@ -3,6 +3,7 @@ package com.systempro.library.service.imp;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +47,7 @@ public class LoanServiceImpl implements LoanService {
 	@Override
 	public Page<Loan> find(LoanFilterDTO filter, Pageable pageble) {
 		// TODO Auto-generated method stub
-		return null;
+		return repository.findByBookIsbnOrCustomer(filter.getIsbn(), filter.getCustomer(), pageble);
 	}
 	
 
