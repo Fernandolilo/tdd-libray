@@ -21,4 +21,6 @@ public interface LoanRepository extends JpaRepository<Loan, Long>{
 			@Param("isbn") String isbn, 
 			@Param("customer") String customer,
 			Pageable pageble);
+
+	Page<Loan> findByBook(Book book, Pageable pageable);
 }
