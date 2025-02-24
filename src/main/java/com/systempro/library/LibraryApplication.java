@@ -1,33 +1,48 @@
 
 package com.systempro.library;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
+
+import com.systempro.library.service.EmailService;
+import com.systempro.library.service.imp.EmailServiceImpl;
+
 //@EnableScheduling agendametno de tarefas
 @EnableScheduling
 @SpringBootApplication
 public class LibraryApplication {
+
+	@Autowired
+	private EmailService emailService;
+	
+    @Bean
+    public CommandLineRunner runner() {
+        return args -> {
+            List<String> emails = Arrays.asList("nando.systempro@hotmail.com");
+            emailService.sendEmail("Testando Servico de emails", emails);
+            System.out.println("Emails enviados........................");
+        };
+    }
+    
+    @Bean
+    public EmailService emailService(JavaMailSender javaMailSender) {
+        return new EmailServiceImpl(javaMailSender);
+    }
 	
 	@Bean
 	public ModelMapper mapper() {
 		return new ModelMapper();
 	}
-	
-	//cron vem ce conologico ou sejatempo
-	/*site da cronmaker para gerar os parametros cron
-	 * 
-	 * http://www.cronmaker.com/;jsessionid=node02bro7auu4cd31t3tt77fc01eb2146780.node0?0
-	 * */
 
-	@Scheduled(cron = "0 50 9 ? * MON-FRI")
-	public void testAgendamentoTarefaz() {
-		System.out.println("AGENDAMENTO DE TAREFAS FUNCIONANDO COM SUCESSO");
-	}
-	
 	public static void main(String[] args) {
 		SpringApplication.run(LibraryApplication.class, args);
 	}

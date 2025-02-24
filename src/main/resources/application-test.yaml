@@ -1,7 +1,23 @@
 spring:
   application:
-    name: library 
-  datasource:    
+    name: library
+  mail:
+    host: smtp.gmail.com
+    username: fdsdejesus@gmail.com
+    password:   # Preencha com a sua senha do Gmail
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
+          starttls:
+            enable: true
+          ssl:
+            enable: true
+  datasource:
     url: jdbc:h2:mem:testdb
     username: sa
     password: 
@@ -9,10 +25,9 @@ spring:
   jpa:
     show-sql: true
     ddl-auto: update
-    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect 
-  
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
   jackson:
-    # para não serializar objetos nulos
+    # Para não serializar objetos nulos
     default-property-inclusion: NON_NULL
     serialization:
-      fail-on-empty-beans: false  
+      fail-on-empty-beans: false
