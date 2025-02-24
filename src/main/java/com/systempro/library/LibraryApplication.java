@@ -23,7 +23,7 @@ public class LibraryApplication {
 	 * http://www.cronmaker.com/;jsessionid=node02bro7auu4cd31t3tt77fc01eb2146780.node0?0
 	 * */
 
-	@Scheduled(cron = "0 5 9 ? * MON-FRI")
+	@Scheduled(cron = "0 50 9 ? * MON-FRI")
 	public void testAgendamentoTarefaz() {
 		System.out.println("AGENDAMENTO DE TAREFAS FUNCIONANDO COM SUCESSO");
 	}
