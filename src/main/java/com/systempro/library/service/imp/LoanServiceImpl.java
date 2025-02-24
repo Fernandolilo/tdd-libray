@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.systempro.library.dto.LoanFilterDTO;
+import com.systempro.library.entity.Book;
 import com.systempro.library.entity.Loan;
 import com.systempro.library.exceptions.BusinessException;
 import com.systempro.library.repository.LoanRepository;
@@ -48,6 +49,12 @@ public class LoanServiceImpl implements LoanService {
 	public Page<Loan> find(LoanFilterDTO filter, Pageable pageble) {
 		// TODO Auto-generated method stub
 		return repository.findByBookIsbnOrCustomer(filter.getIsbn(), filter.getCustomer(), pageble);
+	}
+
+	@Override
+	public Page<Loan> getLoansByBook(Book book, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return repository.findByBook(book, pageable);
 	}
 	
 

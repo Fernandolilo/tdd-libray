@@ -8,10 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,24 +20,23 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.systempro.library.dto.BookDTO;
+import com.systempro.library.dto.LoanDTO;
 import com.systempro.library.entity.Book;
-import com.systempro.library.exceptions.BusinessException;
-import com.systempro.library.exceptions.apierror.ApiErrors;
+import com.systempro.library.entity.Loan;
 import com.systempro.library.service.BookService;
+import com.systempro.library.service.LoanService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/books")
+@RequiredArgsConstructor
 public class BookController {
 
 	private final BookService service;
 	private final ModelMapper mapper;
-
-	public BookController(BookService service, ModelMapper mapper) {
-		this.service = service;
-		this.mapper = mapper;
-	}
+	private final LoanService loanService;
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -82,18 +78,33 @@ public class BookController {
 	@GetMapping
 	public Page<BookDTO> find(BookDTO dto, Pageable pageRequest) {
 		Book filter = mapper.map(dto, Book.class);
-		
+
 		filter = Book.builder().autor("Fernando").title("As aventuras").isbn("001").build();
 
 		Page<Book> result = service.find(filter, pageRequest);
 
 		List<BookDTO> list = result.getContent().stream().map(entity -> mapper.map(entity, BookDTO.class))
 				.collect(Collectors.toList());
-		
-		return new PageImpl<BookDTO>(list, pageRequest, result.getTotalElements() );
-	}
-	
 
-	
+		return new PageImpl<BookDTO>(list, pageRequest, result.getTotalElements());
+	}
+
+	@GetMapping("/{id}/loan")
+	public Page<LoanDTO> loansByBook(@PathVariable Long id, Pageable pageable) {
+
+		Book book = service.getById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));		
+		Page<Loan> result =loanService.getLoansByBook(book, pageable);
+		List<LoanDTO> list = result.getContent()
+			.stream()
+			.map(loan ->{
+				Book loanBook = loan.getBook();
+				BookDTO bookDTO = mapper.map(loanBook, BookDTO.class);
+				LoanDTO loanDTO = mapper.map(loan, LoanDTO.class);
+				loanDTO.setBook(bookDTO);
+				return loanDTO;
+			}).collect(Collectors.toList());
+		return new PageImpl<LoanDTO>(list,pageable, result.getTotalElements());
+
+	}
 
 }
