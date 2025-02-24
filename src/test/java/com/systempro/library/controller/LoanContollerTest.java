@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.hamcrest.Matchers;
@@ -19,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -26,15 +30,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.systempro.library.dto.LoanDTO;
+import com.systempro.library.dto.LoanFilterDTO;
 import com.systempro.library.dto.ReturnedLoanDTO;
 import com.systempro.library.entity.Book;
 import com.systempro.library.entity.Loan;
 import com.systempro.library.exceptions.BusinessException;
 import com.systempro.library.service.BookService;
 import com.systempro.library.service.LoanService;
+import com.systempro.library.service.LoanServiceTest;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -138,8 +143,7 @@ public class LoanContollerTest {
 	public void returnInexistentBookTest() throws Exception {
 
 		// cenario
-		ReturnedLoanDTO dto = ReturnedLoanDTO.builder().returned(true).build();
-		
+		ReturnedLoanDTO dto = ReturnedLoanDTO.builder().returned(true).build();		
 		
 		
 		BDDMockito.given(loanService.getById(Mockito.anyLong())).willReturn(Optional.empty());
@@ -149,5 +153,42 @@ public class LoanContollerTest {
 		mockMvc.perform(patch(LOAN_API.concat("1")).accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isNotFound());
 		
-			}
+	}
+	
+	@Test
+	@DisplayName("deve filtrar livros")
+	public void findLoansTests() throws Exception {
+		
+		//cenario
+		Long id = 1L;
+		
+		Loan loan = LoanServiceTest.createLoan();
+		Book book = Book.builder().id(1L).isbn("321").build();
+		loan.setBook(book);
+		loan.setId(id);
+	
+		
+		// Definindo comportamento do mock
+		BDDMockito.given(loanService.find(Mockito.any(LoanFilterDTO.class), Mockito.any(Pageable.class)))
+	    .willReturn(new PageImpl<Loan>(Arrays.asList(loan), PageRequest.of(0, 100), 1L));
+       
+        
+        //  String queryString = String.format("?title=%s&autor=%s&page=0&size=100", book.getTitle(), book.getAutor());
+		//estamos fazendo uma interpolação, ?title=% == book.getTitle(), &autor=%s == book.getAutor());
+        
+		String queryString = String.format("?isbn=%s&customer=%s&page=0&size=100", book.getIsbn(), loan.getCustomer());
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+        	.get(LOAN_API.concat(queryString))
+        	.accept(MediaType.APPLICATION_JSON);
+        
+        mockMvc
+        		.perform(request)
+		        .andExpect( status().isOk())
+		        .andExpect( jsonPath("content", Matchers.hasSize(1)))
+		        .andExpect( jsonPath("totalElements").value(1) )
+		        .andExpect( jsonPath("pageable.pageSize").value(100))
+		        .andExpect( jsonPath("pageable.pageNumber").value(0))		        
+        ;
+	}
 }
