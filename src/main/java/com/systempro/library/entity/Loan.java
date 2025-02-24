@@ -2,6 +2,7 @@ package com.systempro.library.entity;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,6 +25,9 @@ public class Loan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String customer;
+    
+    @Column(name = "customer_email")
+    private String customerEmail;
     private LocalDate instante;
     private Boolean returned;
 

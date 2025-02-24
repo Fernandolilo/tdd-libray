@@ -63,7 +63,7 @@ public class LoanContollerTest {
 	public void createLoanTets() throws Exception {
 		// cenario
 
-		LoanDTO dto = LoanDTO.builder().isbn("123").customer("Fulano").build();
+		LoanDTO dto = LoanDTO.builder().isbn("123").email("curstomer@email.com").customer("Fulano").build();
 
 		String json = new ObjectMapper().writeValueAsString(dto);
 
