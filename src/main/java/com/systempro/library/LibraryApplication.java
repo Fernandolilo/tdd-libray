@@ -21,28 +21,9 @@ import com.systempro.library.service.imp.EmailServiceImpl;
 @SpringBootApplication
 public class LibraryApplication {
 
-	@Autowired
-	private EmailService emailService;
 	
-    @Bean
-    public CommandLineRunner runner() {
-        return args -> {
-            List<String> emails = Arrays.asList("nando.systempro@hotmail.com");
-            emailService.sendEmail("Testando Servico de emails", emails);
-            System.out.println("Emails enviados........................");
-        };
-    }
-    
-    @Bean
-    public EmailService emailService(JavaMailSender javaMailSender) {
-        return new EmailServiceImpl(javaMailSender);
-    }
 	
-	@Bean
-	public ModelMapper mapper() {
-		return new ModelMapper();
-	}
-
+   
 	public static void main(String[] args) {
 		SpringApplication.run(LibraryApplication.class, args);
 	}

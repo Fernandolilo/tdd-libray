@@ -3,7 +3,6 @@ package com.systempro.library.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +16,7 @@ public class ScheduledService {
 
 	/*
 	 * //cron vem ce conologico ou sejatempo /*site da cronmaker para gerar os
-	 * parametros cron
-	 * 
+	 * parametros cron 
 	 * http://www.cronmaker.com/;jsessionid=node02bro7auu4cd31t3tt77fc01eb2146780.
 	 * node0?0
 	 */
@@ -32,9 +30,7 @@ public class ScheduledService {
 	@Scheduled(cron = CRON_LATE_LOANS)
 	public void sendMailToLateLoans() {
 		
-		 String message ="Devolva os livros mal carater;";
-		
-		
+		 String message ="Devolva os livros mal carater;";		
 		
 		List<Loan> allLateLoans = loanService.getAllLateLoans();
 		

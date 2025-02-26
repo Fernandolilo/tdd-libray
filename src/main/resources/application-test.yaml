@@ -4,7 +4,7 @@ spring:
   mail:
     host: smtp.gmail.com
     username: fdsdejesus@gmail.com
-    password:   # Preencha com a sua senha do Gmail
+    password: sfusstdmrlgvnbky  # Preencha com a sua senha do Gmail
     properties:
       mail:
         smtp:
