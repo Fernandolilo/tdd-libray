@@ -2,3 +2,5 @@ language: java
 jdk:
   - openjdk17
 dist: temurin
+before_install
+  -chmod +x mvnw
