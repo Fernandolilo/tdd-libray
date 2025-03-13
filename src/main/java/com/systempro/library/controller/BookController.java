@@ -26,8 +26,10 @@ import com.systempro.library.entity.Loan;
 import com.systempro.library.service.BookService;
 import com.systempro.library.service.LoanService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+@Tag(name = "BOOKS")
 
 @RestController
 @RequestMapping("/books")

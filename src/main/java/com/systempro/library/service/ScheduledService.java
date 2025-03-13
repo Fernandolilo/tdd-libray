@@ -28,16 +28,14 @@ public class ScheduledService {
 
 	
 	@Scheduled(cron = CRON_LATE_LOANS)
-	public void sendMailToLateLoans() {
-		
+	public void sendMailToLateLoans() {		
 		 String message ="Devolva os livros mal carater;";		
 		
 		List<Loan> allLateLoans = loanService.getAllLateLoans();
 		
 		List<String> mails = allLateLoans.stream().map(
 					loan -> loan.getCustomerEmail()
-				).collect(Collectors.toList());
-		
+				).collect(Collectors.toList());		
 
 		emailService.sendEmail(message ,mails);
 		
