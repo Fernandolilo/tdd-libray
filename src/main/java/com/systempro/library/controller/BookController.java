@@ -30,8 +30,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-@Tag(name = "BOOKS")
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@Tag(name = "BOOKS")
 @RestController
 @RequestMapping("/books")
 @RequiredArgsConstructor
@@ -48,12 +50,15 @@ public class BookController {
 	public BookDTO create(@RequestBody @Valid BookDTO dto) {
 		Book entity = mapper.map(dto, Book.class);
 		entity = service.save(entity);
+		
+		log.info("creating a book for isbn: {}", dto.getIsbn());
 		return mapper.map(entity, BookDTO.class);
 	}
 
 	@Operation(summary = "BUSCA DE LIVRO POR ID")
 	@GetMapping("/{id}")
 	public BookDTO getById(@PathVariable Long id) {
+		log.info(" obtaining details for boos id: {}", id);
 		return service.getById(id).map(book -> mapper.map(book, BookDTO.class))
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -63,7 +68,7 @@ public class BookController {
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long id) {
-
+		log.info("deleting book of id: {}", id);
 		Book book = service.getById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
 		service.delete(book);
