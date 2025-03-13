@@ -28,8 +28,11 @@ import com.systempro.library.entity.Loan;
 import com.systempro.library.service.BookService;
 import com.systempro.library.service.LoanService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "LOANS")
 @RestController
 @RequestMapping("/loans/")
 @RequiredArgsConstructor
@@ -39,6 +42,7 @@ public class LoanController {
 	private final BookService bookService;
 	private final ModelMapper mapper;
 
+	@Operation(summary = "CRIAÇÃO DE NOVO EMPRESTIMO")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Long create(@RequestBody LoanDTO dto) {
@@ -52,6 +56,7 @@ public class LoanController {
 		return entity.getId();
 	}
 	
+	@Operation(summary = "ATUALIZAÇÃO DE EMPRESTIMO")
 	@PatchMapping("/{id}")
 	public void returnedBook(@PathVariable Long id, @RequestBody ReturnedLoanDTO dto) {
 		
@@ -60,7 +65,7 @@ public class LoanController {
 		service.update(loan);
 	}
 
-	
+	@Operation(summary = "BUSCA PAGINADA DE EMPRESTIMOS")	
 	@GetMapping
 	public Page<LoanDTO> find (LoanFilterDTO dto, Pageable pageRequest){
 		

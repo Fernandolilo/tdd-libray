@@ -26,6 +26,7 @@ import com.systempro.library.entity.Loan;
 import com.systempro.library.service.BookService;
 import com.systempro.library.service.LoanService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,8 @@ public class BookController {
 	private final ModelMapper mapper;
 	private final LoanService loanService;
 
+
+	@Operation(summary = "CRIAÇÃO DE NOVO LIVRO")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public BookDTO create(@RequestBody @Valid BookDTO dto) {
@@ -48,6 +51,7 @@ public class BookController {
 		return mapper.map(entity, BookDTO.class);
 	}
 
+	@Operation(summary = "BUSCA DE LIVRO POR ID")
 	@GetMapping("/{id}")
 	public BookDTO getById(@PathVariable Long id) {
 		return service.getById(id).map(book -> mapper.map(book, BookDTO.class))
@@ -55,6 +59,7 @@ public class BookController {
 
 	}
 
+	@Operation(summary = "DELETA LIVRO POR ID")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long id) {
@@ -64,6 +69,7 @@ public class BookController {
 		service.delete(book);
 	}
 
+	@Operation(summary = "ATUALIZA LIVRO POR ID")
 	@PutMapping("/{id}")
 	public BookDTO update(@PathVariable Long id, BookDTO dto) {
 
@@ -77,6 +83,7 @@ public class BookController {
 		return mapper.map(book, BookDTO.class);
 	}
 
+	@Operation(summary = "BUSCA DE LIVRO PAGINADO")
 	@GetMapping
 	public Page<BookDTO> find(BookDTO dto, Pageable pageRequest) {
 		Book filter = mapper.map(dto, Book.class);
@@ -91,6 +98,7 @@ public class BookController {
 		return new PageImpl<BookDTO>(list, pageRequest, result.getTotalElements());
 	}
 
+	@Operation(summary = "BUSCA DE LIVRO ID TRAZENDO EMPRESTIMO")	
 	@GetMapping("/{id}/loan")
 	public Page<LoanDTO> loansByBook(@PathVariable Long id, Pageable pageable) {
 
